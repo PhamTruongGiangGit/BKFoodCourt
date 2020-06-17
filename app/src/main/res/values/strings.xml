@@ -4,4 +4,7 @@
     <string name="input_password">Password</string>
     <string name="button_login">Login</string>
     <string name="button_change_password">Change password</string>
+    <string name="menu">Menu</string>
+    <string name="cart">Cart</string>
+    <string name="account">Account</string>
 </resources>
