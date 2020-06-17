@@ -1,11 +1,15 @@
 package com.example.bkfoodcourt
 
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -15,9 +19,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        /** Call function to check network connection on start up **/
+        if (!checkNetwork(this)) {
+            Toast.makeText(this, "Please connect to network", Toast.LENGTH_LONG).show() /** If the mobile is not connected to network, show an notification**/
+        }
     }
 
-    var mAuth = FirebaseAuth.getInstance() // Create an authentication instance
+    var mAuth = FirebaseAuth.getInstance() /** Create an authentication instance **/
 
     /** Login function (activated when clicking login button) **/
 
@@ -35,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Login Successfully", Toast.LENGTH_LONG).show() /** Show the notification that logged in successfully **/
                     startActivity(Intent(this, HomePage::class.java)) /** START A NEW ACTIVITY (MOVE TO HOME PAGE) **/
                 } else {
-                    Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show() /** Show the notification that logged failed **/
+                    Toast.makeText(this, "Wrong email/password", Toast.LENGTH_SHORT).show() /** Show the notification that logged failed **/
                 }
             })
 
@@ -44,5 +53,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /*******************************************************/
+    /******************************************************/
+
+    /** Check network function **/
+
+    /******************************************************/
+
+   fun checkNetwork (context: Context) : Boolean{
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+        return isConnected
+    }
+
+    /******************************************************/
 }

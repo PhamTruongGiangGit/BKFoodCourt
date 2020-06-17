@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BKFoodCourt</string>
+    <string name="app_name">BK Food Court</string>
     <string name="input_email">Email</string>
     <string name="input_password">Password</string>
     <string name="button_login">Login</string>
