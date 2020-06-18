@@ -2,16 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navigation_menu"
-        android:icon="@android:drawable/ic_media_rew"
+        android:icon="@drawable/menu"
+        android:enabled="true"
         android:title="@string/menu" />
 
     <item
         android:id="@+id/navigation_cart"
-        android:icon="@android:drawable/ic_media_play"
+        android:icon="@drawable/cart"
+        android:enabled="true"
         android:title="@string/cart" />
 
     <item
         android:id="@+id/navigation_account"
-        android:icon="@android:drawable/ic_media_ff"
+        android:icon="@drawable/user"
+        android:enabled="true"
         android:title="@string/account" />
 </menu>
