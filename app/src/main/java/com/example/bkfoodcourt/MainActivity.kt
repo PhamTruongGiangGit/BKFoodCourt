@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             this.mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener ( this, OnCompleteListener<AuthResult> { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Login Successfully", Toast.LENGTH_LONG).show() /** Show the notification that logged in successfully **/
-                    startActivity(Intent(this, HomePage::class.java)) /** START A NEW ACTIVITY (MOVE TO HOME PAGE) **/
+                    startActivity(Intent(this, HomeActivity::class.java)) /** START A NEW ACTIVITY (MOVE TO HOME PAGE) **/
                 } else {
                     Toast.makeText(this, "Wrong email/password", Toast.LENGTH_SHORT).show() /** Show the notification that logged failed **/
                 }

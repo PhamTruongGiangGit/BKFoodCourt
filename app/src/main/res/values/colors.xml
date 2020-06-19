@@ -7,4 +7,5 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorLoginButton">#00909E</color>
     <color name="colorNavigationBottom">#03887C</color>
+    <color name="overlay_color">#55333639</color>
 </resources>
