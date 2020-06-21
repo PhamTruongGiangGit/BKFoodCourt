@@ -22,4 +22,10 @@
         android:name="com.example.bkfoodcourt.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/nav_food_list"
+        android:name="com.example.bkfoodcourt.ui.foodlist.FoodListFragment"
+        android:label="@string/menu_food_list"
+        tools:layout="@layout/fragment_food_list"
+        />
 </navigation>
