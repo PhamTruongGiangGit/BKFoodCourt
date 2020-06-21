@@ -10,15 +10,37 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    val RC_SIGN_IN = 1000
+    var googleSignInClient : GoogleSignInClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Configure Google Sign In
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        loginWithGoogleButton.setOnClickListener {
+            var signInIntent = googleSignInClient?.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
 
         /** Call function to check network connection on start up **/
         if (!checkNetwork(this)) {
@@ -67,4 +89,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     /******************************************************/
+
+    fun firebaseAuthWithGoogle(acct : GoogleSignInAccount?){
+        var credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
+        FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
+                task ->
+            if (task.isSuccessful) {
+                Toast.makeText(this, "Google login success!", Toast.LENGTH_LONG).show()
+                val homeIntent = Intent(this, HomeActivity::class.java)
+                startActivity(homeIntent)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN){
+            var task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            var account = task.getResult(ApiException::class.java)
+            firebaseAuthWithGoogle(account)
+        }
+    }
 }
