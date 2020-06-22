@@ -1,8 +1,10 @@
 package com.example.bkfoodcourt.Common
 
 import com.example.bkfoodcourt.Model.CategoryModel
+import com.example.bkfoodcourt.Model.FoodModel
 
 object Common {
+    var foodSelected: FoodModel?=null
     var categorySelected: CategoryModel?=null
     val CATEGORY_REF: String = "Category"
     val FULL_WIDTH_CONLUMN: Int = 1

@@ -1,4 +1,4 @@
-package com.example.bkfoodcourt.Model
+package com.example.bkfoodcourt.Adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,9 +11,8 @@ import com.bumptech.glide.Glide
 import com.example.bkfoodcourt.Callback.IRecyclerItemClickListener
 import com.example.bkfoodcourt.Common.Common.categorySelected
 import com.example.bkfoodcourt.EventBus.CategoryClick
+import com.example.bkfoodcourt.Model.CategoryModel
 import com.example.bkfoodcourt.R
-import com.google.android.gms.common.internal.service.Common
-import de.hdodenhof.circleimageview.CircleImageView
 import org.greenrobot.eventbus.EventBus
 
 class MyCategoriesAdapter(
@@ -43,7 +42,7 @@ class MyCategoriesAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyCategoriesAdapter.MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_category_item, parent, false))
     }
 
@@ -65,7 +64,7 @@ class MyCategoriesAdapter(
         return cateGoriesList.size
     }
 
-    override fun onBindViewHolder(holder: MyCategoriesAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         Glide.with(context).load(cateGoriesList.get(position).image).into(holder.category_image!!)
         holder.category_name!!.setText(cateGoriesList.get(position).name)
 

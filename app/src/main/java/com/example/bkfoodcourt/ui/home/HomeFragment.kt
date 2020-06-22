@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import com.asksira.loopingviewpager.LoopingViewPager
-import com.example.bkfoodcourt.Model.MyBestDealsApdapter
-import com.example.bkfoodcourt.Model.MyPopularCategoriesAdapter
+import com.example.bkfoodcourt.Adapter.MyBestDealsApdapter
+import com.example.bkfoodcourt.Adapter.MyPopularCategoriesAdapter
 import com.example.bkfoodcourt.R
 
 class HomeFragment : Fragment() {
@@ -40,13 +40,21 @@ class HomeFragment : Fragment() {
 
         homeViewModel.popularList.observe(viewLifecycleOwner, Observer {
             val listData = it
-            val adapter = MyPopularCategoriesAdapter(requireContext(), listData)
+            val adapter =
+                MyPopularCategoriesAdapter(
+                    requireContext(),
+                    listData
+                )
             recyclerView!!.adapter = adapter
             recyclerView!!.layoutAnimation = layoutAnimationController
         })
 
         homeViewModel.bestDealList.observe(viewLifecycleOwner, Observer {
-            val adapter = MyBestDealsApdapter(requireContext(), it, false)
+            val adapter = MyBestDealsApdapter(
+                requireContext(),
+                it,
+                false
+            )
             viewPager!!.adapter = adapter
         })
         return root

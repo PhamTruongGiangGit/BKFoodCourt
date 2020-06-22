@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.bkfoodcourt.Callback.IRecyclerItemClickListener
 import com.example.bkfoodcourt.Common.Common
 import com.example.bkfoodcourt.EventBus.CategoryClick
+import com.example.bkfoodcourt.EventBus.FoodItemClick
 import com.example.bkfoodcourt.Model.CategoryModel
 import com.example.bkfoodcourt.Model.FoodModel
 import com.example.bkfoodcourt.R
@@ -20,19 +21,17 @@ class MyFoodListAdapter(
     internal var context: Context,
     internal var foodList: List<FoodModel>
 ) : RecyclerView.Adapter<MyFoodListAdapter.MyViewHolder>() {
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
 
         var txt_food_name: TextView? = null
-
         var txt_food_price: TextView?= null
-
         var img_food_image: ImageView?=null
         var img_food_fav: ImageView?=null
         var img_food_cart   : ImageView?=null
 
-
-
         internal var listener: IRecyclerItemClickListener?=null;
+
         fun setListener( listener: IRecyclerItemClickListener){
             this.listener=listener;
         }
@@ -44,17 +43,17 @@ class MyFoodListAdapter(
             img_food_fav= itemView.findViewById(R.id.img_fav) as ImageView
             img_food_cart= itemView.findViewById(R.id.img_quick_cart) as ImageView
 
-
+            itemView.setOnClickListener(this)
         }
 
-
+        override fun onClick(view: View?) {
+            listener!!.onItemClick(view!!,adapterPosition)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyFoodListAdapter.MyViewHolder {
         return MyViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_food_item, parent, false))
     }
-
-
 
     override fun getItemCount(): Int {
         return foodList.size
@@ -65,8 +64,13 @@ class MyFoodListAdapter(
         holder.txt_food_name!!.setText(foodList.get(position).name)
         holder.txt_food_price!!.setText(foodList.get(position).price.toString() + " VND")
 
+        holder.setListener(object:IRecyclerItemClickListener{
+            override fun onItemClick(view: View, pos: Int) {
+                Common.foodSelected = foodList.get(pos)
+                EventBus.getDefault().postSticky(FoodItemClick(true, foodList.get(pos)))
+            }
 
-
-
+        })
     }
 }
+

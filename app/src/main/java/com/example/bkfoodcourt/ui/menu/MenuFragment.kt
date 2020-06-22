@@ -1,17 +1,13 @@
 package com.example.bkfoodcourt.ui.menu
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
-import android.widget.GridLayout
-import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -19,16 +15,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bkfoodcourt.Common.Common
 import com.example.bkfoodcourt.Common.SpacesItemDecoration
-import com.example.bkfoodcourt.Model.MyCategoriesAdapter
+import com.example.bkfoodcourt.Adapter.MyCategoriesAdapter
 import com.example.bkfoodcourt.R
-import kotlinx.android.synthetic.main.fragment_category.*
 
 class MenuFragment : Fragment() {
 
     private lateinit var menuViewModel: MenuViewModel
     private lateinit var dialog : AlertDialog
     private lateinit var layoutAnimationController : LayoutAnimationController
-    private var adapter:MyCategoriesAdapter? = null
+    private var adapter: MyCategoriesAdapter? = null
     private var recycler_menu:RecyclerView? = null
 
 
@@ -46,7 +41,10 @@ class MenuFragment : Fragment() {
            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         })
         menuViewModel.getCategoryList().observe(this, Observer {
-            adapter = MyCategoriesAdapter(context!!, it)
+            adapter = MyCategoriesAdapter(
+                context!!,
+                it
+            )
             recycler_menu!!.adapter = adapter
         })
         return root
