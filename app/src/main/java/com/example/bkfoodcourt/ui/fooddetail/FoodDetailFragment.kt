@@ -55,7 +55,7 @@ class FoodDetailFragment : Fragment() {
         Glide.with(requireContext()).load(it!!.image).into(img_food!!)
         food_name!!.text = StringBuilder(it!!.name!!)
         food_description!!.text = StringBuilder(it!!.description!!)
-        food_price!!.text = StringBuilder(it!!.price!!.toString())
+        food_price!!.text = StringBuilder(it!!.price!!.toString() + " VND")
     }
 
     private fun initView(root: View?) {
