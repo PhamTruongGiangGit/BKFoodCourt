@@ -2,6 +2,7 @@ package com.example.bkfoodcourt.Common
 
 import com.example.bkfoodcourt.Model.CategoryModel
 import com.example.bkfoodcourt.Model.FoodModel
+import com.example.bkfoodcourt.Model.UserModel
 
 object Common {
     var foodSelected: FoodModel?=null
@@ -12,4 +13,5 @@ object Common {
     val POPULAR_REF: String="MostPopular"
     val BEST_DEALS_REF: String="BestDeals"
     val USER_REFERENCE="Users"
+    var currentUser:UserModel?=null
 }
