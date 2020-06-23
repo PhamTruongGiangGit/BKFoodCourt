@@ -1,4 +1,3 @@
 package com.example.bkfoodcourt.EventBus
 
-class CountCartEvent {
-}
+    class CountCartEvent(var isSuccess:Boolean)

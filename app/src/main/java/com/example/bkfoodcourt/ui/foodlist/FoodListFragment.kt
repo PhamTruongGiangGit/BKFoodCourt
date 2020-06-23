@@ -26,6 +26,11 @@ class FoodListFragment: Fragment(){
     var layoutAnimationController: LayoutAnimationController?=null
 
     var adapter:MyFoodListAdapter?=null
+    override fun onStop() {
+        if (adapter!=null)
+            adapter!!.onStop()
+        super.onStop()
+    }
 
      override fun onCreateView(inflater:LayoutInflater,container:ViewGroup?,savedInstanceState:Bundle?): View? {
         foodListViewModel = ViewModelProvider(this).get(FoodListViewModel::class.java)

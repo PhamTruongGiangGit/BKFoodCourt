@@ -13,5 +13,5 @@ object Common {
     val POPULAR_REF: String="MostPopular"
     val BEST_DEALS_REF: String="BestDeals"
     val USER_REFERENCE="Users"
-    var currentUser:UserModel?=null
+    var currentUser:UserModel?=UserModel()
 }

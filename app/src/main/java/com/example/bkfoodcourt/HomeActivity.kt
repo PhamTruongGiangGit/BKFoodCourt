@@ -14,9 +14,20 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.example.bkfoodcourt.Common.Common
+import com.example.bkfoodcourt.Database.CartDataSource
+import com.example.bkfoodcourt.Database.CartDatabase
+import com.example.bkfoodcourt.Database.LocalCartDataSource
 import com.example.bkfoodcourt.EventBus.CategoryClick
+import com.example.bkfoodcourt.EventBus.CountCartEvent
 import com.example.bkfoodcourt.EventBus.FoodItemClick
 import com.example.bkfoodcourt.Model.CategoryModel
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.internal.operators.single.SingleObserveOn
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.app_bar_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -24,10 +35,17 @@ import org.greenrobot.eventbus.ThreadMode
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-
+    private lateinit var cartDataSource: CartDataSource
+    override fun onResume() {
+        super.onResume()
+        countCartItem()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        cartDataSource=LocalCartDataSource(CartDatabase.getInstance(this).cartDAO())
+
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -48,6 +66,8 @@ class HomeActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        countCartItem()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -80,11 +100,30 @@ class HomeActivity : AppCompatActivity() {
     }
 
     @Subscribe(sticky = true, threadMode= ThreadMode.MAIN)
-    fun onFoodSelected(event: FoodItemClick){
+    fun onCountCartEvent(event: CountCartEvent){
         if (event.isSuccess)
         {
-            //Toast.makeText(this, "Click to "+ event.category.name, Toast.LENGTH_SHORT).show()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.nav_food_detail)
+            countCartItem()
         }
     }
+    private fun countCartItem(){
+        cartDataSource.countItemCart(Common.currentUser!!.uid!!)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object :SingleObserver<Int>{
+                override fun onSuccess(t: Int) {
+                    fab.count=t
+                }
+
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onError(e: Throwable) {
+                    Toast.makeText(this@HomeActivity, "[Count Cart]"+e.message, Toast.LENGTH_SHORT).show()
+                }
+
+            })
+    }
+
 }

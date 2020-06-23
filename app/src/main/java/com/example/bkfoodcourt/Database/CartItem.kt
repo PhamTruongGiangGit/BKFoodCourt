@@ -25,5 +25,21 @@ class CartItem {
     @ColumnInfo(name = "uid")
     var uid:String?=null
 
+    @ColumnInfo(name="userPhone")
+    var userPhone:String?=null
+
+    @ColumnInfo(name="foodImage")
+    var foodImage:String?=null
+
+    @ColumnInfo(name="foodExtraPrice")
+    var foodExtraPrice:Double?=null
+
+    @ColumnInfo(name="foodAddon")
+    var foodAddon:String?=null
+
+    @ColumnInfo(name="foodSize")
+    var foodSize:String?=null
+
+
     /** CAN ADD ADD ON FOR FOOD OR USER PHONE LATER **/
 }

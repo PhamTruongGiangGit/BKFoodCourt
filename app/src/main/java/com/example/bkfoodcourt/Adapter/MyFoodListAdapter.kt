@@ -6,21 +6,38 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.bkfoodcourt.Callback.IRecyclerItemClickListener
 import com.example.bkfoodcourt.Common.Common
+import com.example.bkfoodcourt.Database.CartDataSource
+import com.example.bkfoodcourt.Database.CartDatabase
+import com.example.bkfoodcourt.Database.CartItem
+import com.example.bkfoodcourt.Database.LocalCartDataSource
 import com.example.bkfoodcourt.EventBus.CategoryClick
+import com.example.bkfoodcourt.EventBus.CountCartEvent
 import com.example.bkfoodcourt.EventBus.FoodItemClick
 import com.example.bkfoodcourt.Model.CategoryModel
 import com.example.bkfoodcourt.Model.FoodModel
 import com.example.bkfoodcourt.R
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 
 class MyFoodListAdapter(
     internal var context: Context,
     internal var foodList: List<FoodModel>
 ) : RecyclerView.Adapter<MyFoodListAdapter.MyViewHolder>() {
+
+    private val compositeDisposable: CompositeDisposable
+    private val cartDataSource:CartDataSource
+    init {
+        compositeDisposable= CompositeDisposable()
+        cartDataSource=LocalCartDataSource(CartDatabase.getInstance(context).cartDAO())
+    }
+
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
@@ -37,6 +54,8 @@ class MyFoodListAdapter(
         }
 
         init {
+
+
             txt_food_name = itemView.findViewById(R.id.txt_food_name) as TextView
             txt_food_price = itemView.findViewById(R.id.txt_food_price) as TextView
             img_food_image= itemView.findViewById(R.id.img_food_image) as ImageView
@@ -71,6 +90,33 @@ class MyFoodListAdapter(
             }
 
         })
+        holder.img_food_cart!!.setOnClickListener{
+            val cartItem=CartItem()
+            cartItem.uid=Common.currentUser!!.uid
+            //cartItem.userPhone=Common.currentUser!!.phone
+            cartItem.foodId=foodList.get(position).id!!
+            cartItem.foodName=foodList.get(position).name!!
+            cartItem.foodImage=foodList.get(position).image!!
+            cartItem.foodPrice=foodList.get(position).price.toDouble()
+            cartItem.foodQuantity=1
+            cartItem.foodExtraPrice=0.0
+            cartItem.foodAddon="Default"
+            cartItem.foodSize="Default"
+            compositeDisposable.add(cartDataSource.insertOrReplaceAll(cartItem)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Toast.makeText(context, "Add to cart success", Toast.LENGTH_SHORT).show()
+                    //Thông báo cho HomeActivity update CounterFab
+                    EventBus.getDefault().postSticky(CountCartEvent(true))
+                },{
+                    t:Throwable? -> Toast.makeText(context, "[Insert cart]" +t!!.message, Toast.LENGTH_SHORT).show()
+                }))
+        }
+    }
+    fun onStop(){
+        if(compositeDisposable!=null)
+            compositeDisposable.clear()
     }
 }
 
