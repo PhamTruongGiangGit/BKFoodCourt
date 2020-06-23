@@ -45,6 +45,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         cartDataSource=LocalCartDataSource(CartDatabase.getInstance(this).cartDAO())
+        fab.count = 0
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -106,6 +107,16 @@ class HomeActivity : AppCompatActivity() {
             countCartItem()
         }
     }
+
+    @Subscribe(sticky = true, threadMode= ThreadMode.MAIN)
+    fun onFoodSelected(event: FoodItemClick){
+        if (event.isSuccess)
+        {
+            //Toast.makeText(this, "Click to "+ event.category.name, Toast.LENGTH_SHORT).show()
+            findNavController(R.id.nav_host_fragment).navigate(R.id.nav_food_detail)
+        }
+    }
+
     private fun countCartItem(){
         cartDataSource.countItemCart(Common.currentUser!!.uid!!)
             .subscribeOn(Schedulers.io())
