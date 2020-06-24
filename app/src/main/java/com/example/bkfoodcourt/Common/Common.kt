@@ -14,4 +14,5 @@ object Common {
     val BEST_DEALS_REF: String="BestDeals"
     val USER_REFERENCE="Users"
     var currentUser:UserModel?=UserModel()
+    val COMMENT_REF:String = "Comments"
 }

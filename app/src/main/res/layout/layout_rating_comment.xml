@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#049587"
+    android:padding="8dp">
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        android:numStars="5"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/edit_comment"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite"
+            android:hint="Your comment"
+            android:maxLines="100"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+        </EditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>
