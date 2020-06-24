@@ -1,11 +1,11 @@
 package com.example.bkfoodcourt.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -13,14 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.ButterKnife
 import butterknife.Unbinder
-import com.asksira.loopingviewpager.LoopingPagerAdapter
 import com.asksira.loopingviewpager.LoopingViewPager
-import com.example.bkfoodcourt.Model.MyBestDealsApdapter
-import com.example.bkfoodcourt.Model.MyPopularCategoriesAdapter
-import com.example.bkfoodcourt.Model.PopularCategoryModel
+import com.example.bkfoodcourt.Adapter.MyBestDealsApdapter
+import com.example.bkfoodcourt.Adapter.MyPopularCategoriesAdapter
 import com.example.bkfoodcourt.R
-import com.example.bkfoodcourt.ui.gallery.GalleryViewModel
-import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
 
@@ -29,6 +25,7 @@ class HomeFragment : Fragment() {
     var recyclerView:RecyclerView?=null
     var viewPager:LoopingViewPager?=null
     var unbinder : Unbinder?=null
+    var layoutAnimationController : LayoutAnimationController? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,18 +40,28 @@ class HomeFragment : Fragment() {
 
         homeViewModel.popularList.observe(viewLifecycleOwner, Observer {
             val listData = it
-            val adapter = MyPopularCategoriesAdapter(requireContext(), listData)
+            val adapter =
+                MyPopularCategoriesAdapter(
+                    requireContext(),
+                    listData
+                )
             recyclerView!!.adapter = adapter
+            recyclerView!!.layoutAnimation = layoutAnimationController
         })
 
         homeViewModel.bestDealList.observe(viewLifecycleOwner, Observer {
-            val adapter = MyBestDealsApdapter(requireContext(), it, false)
+            val adapter = MyBestDealsApdapter(
+                requireContext(),
+                it,
+                false
+            )
             viewPager!!.adapter = adapter
         })
         return root
     }
 
     private fun initView(root:View) {
+        layoutAnimationController =  AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
         viewPager = root.findViewById(R.id.viewpager) as LoopingViewPager
         recyclerView = root.findViewById(R.id.recycler_popular) as RecyclerView
         recyclerView!!.setHasFixedSize(true)

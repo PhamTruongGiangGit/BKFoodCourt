@@ -9,4 +9,7 @@
     <color name="colorNavigationBottom">#03887C</color>
     <color name="colorLoginText">#ff8c00</color>
     <color name="overlay_color">#55333639</color>
+    <color name="border_color">#AA333639</color>
+    <color name="login_text">#ff8c00</color>
+    <color name="background_button_cart_star">#CD0449</color>
 </resources>

@@ -20,6 +20,11 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.activity_main.*
+import com.example.bkfoodcourt.Common.Common
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity() {
 
@@ -63,6 +68,9 @@ class MainActivity : AppCompatActivity() {
         if (!email.isEmpty() && !password.isEmpty()) {
             this.mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener ( this, OnCompleteListener<AuthResult> { task ->
                 if (task.isSuccessful) {
+                    var uid :String = mAuth.currentUser!!.uid
+                    Common.currentUser!!.uid=uid
+
                     Toast.makeText(this, "Login Successfully", Toast.LENGTH_LONG).show() /** Show the notification that logged in successfully **/
                     startActivity(Intent(this, HomeActivity::class.java)) /** START A NEW ACTIVITY (MOVE TO HOME PAGE) **/
                 } else {

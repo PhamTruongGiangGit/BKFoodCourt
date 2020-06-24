@@ -12,14 +12,20 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.bkfoodcourt.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_menu"
+        android:name="com.example.bkfoodcourt.ui.menu.MenuFragment"
+        android:label="@string/menu_category"
+        tools:layout="@layout/fragment_category" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.bkfoodcourt.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_food_detail"
+        android:name="com.example.bkfoodcourt.ui.fooddetail.FoodDetailFragment"
+        android:label="@string/menu_food_detail"
+        tools:layout="@layout/fragment_food_detail" />
+    <fragment
+        android:id="@+id/nav_food_list"
+        android:name="com.example.bkfoodcourt.ui.foodlist.FoodListFragment"
+        android:label="@string/menu_food_list"
+        tools:layout="@layout/fragment_food_list"
+        />
 </navigation>

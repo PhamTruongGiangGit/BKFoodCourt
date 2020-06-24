@@ -1,17 +1,15 @@
-package com.example.bkfoodcourt.Model
+package com.example.bkfoodcourt.Adapter
 
 import android.content.Context
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.bkfoodcourt.Model.PopularCategoryModel
 import com.example.bkfoodcourt.R
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.layout_popular_categories_item.view.*
 
 class MyPopularCategoriesAdapter(internal var context: Context, internal var popularCategoryModel: List<PopularCategoryModel>) : RecyclerView.Adapter<MyPopularCategoriesAdapter.MyViewHolder> () {
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

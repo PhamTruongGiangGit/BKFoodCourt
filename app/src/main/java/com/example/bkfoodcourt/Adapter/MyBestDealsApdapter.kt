@@ -1,4 +1,4 @@
-package com.example.bkfoodcourt.Model
+package com.example.bkfoodcourt.Adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.asksira.loopingviewpager.LoopingPagerAdapter
 import com.bumptech.glide.Glide
+import com.example.bkfoodcourt.Model.BestDealModel
 import com.example.bkfoodcourt.R
 
 class MyBestDealsApdapter(context: Context, itemList:List<BestDealModel>, isInfinite:Boolean) : LoopingPagerAdapter<BestDealModel>(context, itemList, isInfinite)  {
