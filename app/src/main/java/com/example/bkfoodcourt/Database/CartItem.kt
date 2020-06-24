@@ -5,10 +5,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "Cart")
+@Entity(tableName = "Cart", primaryKeys = ["uid","foodId"])
 
 class CartItem {
-    @PrimaryKey
     @NonNull
     @ColumnInfo(name = "foodId")
     var foodId:String?=null
@@ -22,6 +21,7 @@ class CartItem {
     @ColumnInfo(name = "foodQuantity")
     var foodQuantity:Int=0
 
+    @NonNull
     @ColumnInfo(name = "uid")
     var uid:String?=null
 
@@ -31,15 +31,13 @@ class CartItem {
     @ColumnInfo(name="foodImage")
     var foodImage:String?=null
 
-    @ColumnInfo(name="foodExtraPrice")
-    var foodExtraPrice:Double?=null
 
-    @ColumnInfo(name="foodAddon")
-    var foodAddon:String?=null
-
-    @ColumnInfo(name="foodSize")
-    var foodSize:String?=null
-
+    override fun equals(other: Any?): Boolean {
+        if(other === this) return true
+        if(other !is CartItem) return false
+        val cartItem = other as CartItem?
+        return cartItem!!.foodId == this.foodId
+    }
 
     /** CAN ADD ADD ON FOR FOOD OR USER PHONE LATER **/
 }

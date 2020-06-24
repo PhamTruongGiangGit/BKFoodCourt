@@ -21,8 +21,11 @@ import com.example.bkfoodcourt.EventBus.FoodItemClick
 import com.example.bkfoodcourt.Model.CategoryModel
 import com.example.bkfoodcourt.Model.FoodModel
 import com.example.bkfoodcourt.R
+import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.internal.operators.single.SingleObserveOn
 import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 
@@ -86,13 +89,12 @@ class MyFoodListAdapter(
         holder.setListener(object:IRecyclerItemClickListener{
             override fun onItemClick(view: View, pos: Int) {
                 Common.foodSelected = foodList.get(pos)
-                Common.foodSelected!!.key = pos.toString()
                 EventBus.getDefault().postSticky(FoodItemClick(true, foodList.get(pos)))
             }
 
         })
         holder.img_food_cart!!.setOnClickListener{
-            val cartItem=CartItem()
+            var cartItem=CartItem()
             cartItem.uid=Common.currentUser!!.uid
             //cartItem.userPhone=Common.currentUser!!.phone
             cartItem.foodId=foodList.get(position).id!!
@@ -100,19 +102,74 @@ class MyFoodListAdapter(
             cartItem.foodImage=foodList.get(position).image!!
             cartItem.foodPrice=foodList.get(position).price.toDouble()
             cartItem.foodQuantity=1
-            cartItem.foodExtraPrice=0.0
-            cartItem.foodAddon="Default"
-            cartItem.foodSize="Default"
-            compositeDisposable.add(cartDataSource.insertOrReplaceAll(cartItem)
+
+            cartDataSource.getItemWithAllOptionsInCart(Common.currentUser!!.uid!!,
+                cartItem.foodId!!)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Toast.makeText(context, "Add to cart success", Toast.LENGTH_SHORT).show()
-                    //Thông báo cho HomeActivity update CounterFab
-                    EventBus.getDefault().postSticky(CountCartEvent(true))
-                },{
-                    t:Throwable? -> Toast.makeText(context, "[Insert cart]" +t!!.message, Toast.LENGTH_SHORT).show()
-                }))
+                .subscribe(object : SingleObserver<CartItem>{
+                    override fun onSuccess(cartItemFromDB: CartItem) {
+                        if(cartItemFromDB.equals(cartItem))
+                        {
+                            //Neu co gio hang trong database thi ta update
+                            cartItemFromDB.foodQuantity = cartItem.foodQuantity
+
+                            cartDataSource.updateCart(cartItemFromDB)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(object : SingleObserver<Int>{
+                                    override fun onSuccess(t: Int) {
+                                        Toast.makeText(context, "Update Cart Success", Toast.LENGTH_SHORT).show()
+                                        EventBus.getDefault().postSticky(CountCartEvent(true))
+                                    }
+
+                                    override fun onSubscribe(d: Disposable) {
+                                    }
+
+                                    override fun onError(e: Throwable) {
+                                        Toast.makeText(context, "[Update Cart]" + e.message, Toast.LENGTH_SHORT).show()
+                                    }
+
+                                })
+                        }
+                        else
+                        {
+                            //Neu ko co trong database thi insert
+                            compositeDisposable.add(cartDataSource.insertOrReplaceAll(cartItem)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe({
+                                    Toast.makeText(context, "Add to cart success", Toast.LENGTH_SHORT).show()
+                                    //Thông báo cho HomeActivity update CounterFab
+                                    EventBus.getDefault().postSticky(CountCartEvent(true))
+                                },{
+                                        t:Throwable? -> Toast.makeText(context, "[Insert cart]" +t!!.message, Toast.LENGTH_SHORT).show()
+                                }))
+
+                        }
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                    }
+
+                    override fun onError(e: Throwable) {
+                        if(e.message!!.contains("empty"))
+                        {
+                            compositeDisposable.add(cartDataSource.insertOrReplaceAll(cartItem)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe({
+                                    Toast.makeText(context, "Add to cart success", Toast.LENGTH_SHORT).show()
+                                    //Thông báo cho HomeActivity update CounterFab
+                                    EventBus.getDefault().postSticky(CountCartEvent(true))
+                                },{
+                                        t:Throwable? -> Toast.makeText(context, "[Insert cart]" +t!!.message, Toast.LENGTH_SHORT).show()
+                                }))
+                        }
+                        else Toast.makeText(context, "[CART ERROR]" + e.message, Toast.LENGTH_SHORT).show()
+                    }
+
+                })
         }
     }
     fun onStop(){
