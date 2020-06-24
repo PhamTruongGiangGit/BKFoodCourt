@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#049587"
+    android:background="#068F82"
     android:padding="8dp">
 
     <RatingBar
@@ -19,8 +19,8 @@
         <EditText
             android:id="@+id/edit_comment"
             android:textColor="@color/colorWhite"
-            android:textColorHint="@color/colorWhite"
             android:hint="Your comment"
+            android:textStyle="bold"
             android:maxLines="100"
             android:layout_width="match_parent"
             android:layout_height="200dp">

@@ -76,7 +76,7 @@ class FoodDetailFragment : Fragment() {
 
     private fun addRatingToFood(ratingValue: Double) {
         FirebaseDatabase.getInstance()
-            .getReference(Common.COMMENT_REF) // Select category
+            .getReference(Common.CATEGORY_REF) // Select category
             .child(Common.categorySelected!!.menu_id!!) // Select menu in category
             .child("foods") // Select foods array
             .child(Common.foodSelected!!.key!!) //
@@ -92,7 +92,7 @@ class FoodDetailFragment : Fragment() {
                         val foodModel = dataSnapshot.getValue(FoodModel::class.java)
                         foodModel!!.key = Common.foodSelected!!.key
 
-                        val sumRating = foodModel.ratingValue!!.toDouble() + (ratingValue)
+                        val sumRating = foodModel.ratingValue!!.toDouble() + ratingValue
                         val ratingCount = foodModel.ratingCount+1
                         val result = sumRating/ratingCount
                         val updateData = HashMap<String,Any>()
@@ -114,14 +114,12 @@ class FoodDetailFragment : Fragment() {
                             }
                     }
                     else waitingDialog!!.dismiss()
-
                 }
-
             })
     }
 
 
-    private fun displayInfo(it: FoodModel?) {
+    private fun displayInfo(it: FoodModel) {
         Glide.with(requireContext()).load(it!!.image).into(img_food!!)
         food_name!!.text = StringBuilder(it!!.name!!)
         food_description!!.text = StringBuilder(it!!.description!!)
